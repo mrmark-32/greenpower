@@ -1,0 +1,65 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Checkout - GreenPower Solutions{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 50px;">
+
+    <!-- Left Side: Order Items -->
+    <div>
+        <h2>Order Summary</h2>
+        {% for item in items %}
+        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+            <div>
+                {{ item.variant.product.name }} 
+                <small>({{ item.variant.size }} {{ item.variant.color }})</small>
+            </div>
+            <div>₹{{ item.variant.price }} × {{ item.quantity }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Right Side: Payment -->
+    <div style="background: #f8f9fa; padding: 30px; border-radius: 12px;">
+        <h2>Pay with Razorpay</h2>
+        <h3 style="color: #2e7d32;">Total: ₹{{ total }}</h3>
+
+        <button id="pay-button"
+                style="width:100%; padding:18px; background:#2e7d32; color:white; border:none; border-radius:8px; font-size:1.2rem; margin-top:20px; cursor:pointer;">
+            Pay ₹{{ total }} Securely
+        </button>
+    </div>
+</div>
+
+<!-- Razorpay Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById('pay-button').onclick = function(e) {
+        e.preventDefault();
+
+        var options = {
+            "key": "{{ razorpay_key }}",
+            "amount": "{{ amount }}",
+            "currency": "INR",
+            "order_id": "{{ razorpay_order_id }}",
+            "name": "GreenPower Solutions",
+            "description": "Purchase of Solar Products",
+            "handler": function (response){
+                alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                // You can redirect to success page later
+                window.location.href = "{% url 'payment_success' %}?payment_id=" + response.razorpay_payment_id;
+            },
+            "prefill": {
+                "name": "{{ user.get_full_name|default:user.username }}",
+                "email": "{{ user.email }}",
+            },
+            "theme": {
+                "color": "#2e7d32"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    };
+</script>
+{% endblock %}

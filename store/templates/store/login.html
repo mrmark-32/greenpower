@@ -1,0 +1,21 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Login - GreenPower{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 80px auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px;">
+    <h2 style="text-align: center; color: #2e7d32;">Login to Your Account</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="width:100%; padding:12px; background:#2e7d32; color:white; border:none; border-radius:6px; margin-top:15px;">
+            Login
+        </button>
+    </form>
+    
+    <p style="text-align:center; margin-top:20px;">
+        Don't have an account? <a href="{% url 'register' %}">Register</a>
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Profile - GreenPower{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
+    <h1>My Profile</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px; margin-top: 30px;">
+        <div>
+            <h3>Welcome, {{ user.username }}!</h3>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Phone:</strong> {{ user.phone|default:"Not Added" }}</p>
+            <a href="{% url 'logout' %}" style="color: red;">Logout</a>
+        </div>
+        
+        <div>
+            <h3>My Addresses</h3>
+            {% for address in addresses %}
+            <div style="border:1px solid #ddd; padding:15px; margin-bottom:15px; border-radius:8px;">
+                <strong>{{ address.full_name }}</strong><br>
+                {{ address.address_line1 }}, {{ address.city }} - {{ address.pincode }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

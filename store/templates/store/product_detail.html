@@ -1,0 +1,73 @@
+{% extends 'store/base.html' %}
+
+{% block title %}{{ product.name }} - GreenPower Solutions{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px;">
+
+    <!-- Images Section -->
+    <div>
+        {% if product.images.first %}
+            <img id="main-image" src="{{ product.images.first.image.url }}" 
+                 style="width:100%; border-radius: 12px;">
+        {% else %}
+            <img src="https://source.unsplash.com/random/600x400/?solar" 
+                 style="width:100%; border-radius: 12px;">
+        {% endif %}
+        
+        <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+            {% for image in product.images.all %}
+            <img src="{{ image.image.url }}" style="width:80px; height:80px; object-fit:cover; border-radius:8px; cursor:pointer;" 
+                 onclick="document.getElementById('main-image').src = this.src">
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Product Details -->
+    <div>
+        <h1>{{ product.name }}</h1>
+        <p style="font-size: 1.8rem; color: #2e7d32; margin: 15px 0;">
+            ₹{{ product.discount_price|default:product.price }}
+        </p>
+
+        <p><strong>Brand:</strong> {{ product.brand|default:"N/A" }}</p>
+        <p><strong>Category:</strong> {{ product.category }}</p>
+
+        <hr>
+
+        <h3>Select Variant</h3>
+        
+        {% if product.variants.all %}
+            {% for variant in product.variants.all %}
+            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ variant.size }} {{ variant.color }}</strong><br>
+                    <span style="color: green;">Stock: {{ variant.stock }}</span>
+                </div>
+                <div>
+                    <strong>₹{{ variant.price }}</strong><br>
+                    <a href="{% url 'add_to_cart' variant.id %}" 
+                       style="background:#2e7d32; color:white; padding:8px 18px; border-radius:6px; text-decoration:none; display:inline-block; margin-top:5px;">
+                        Add to Cart
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: orange; font-weight: bold;">
+                ⚠ No variants available for this product.<br>
+                Please add variants in Django Admin.
+            </p>
+        {% endif %}
+
+        <br><br>
+        <!-- Safe Wishlist Button -->
+        {% if product.variants.first %}
+            <a href="{% url 'add_to_wishlist' product.variants.first.id %}" 
+               style="color:#2e7d32; text-decoration:none; font-size:1.1rem;">
+                ❤️ Add to Wishlist
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

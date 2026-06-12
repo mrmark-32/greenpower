@@ -1,0 +1,86 @@
+{% extends 'store/base.html' %}
+
+{% block title %}GreenPower Solutions - Solar Energy{% endblock %}
+
+{% block content %}
+
+<!-- Hero + Sidebar -->
+<div style="display: flex; max-width: 1300px; margin: 0 auto;">
+    <!-- Sidebar Categories -->
+    <div class="sidebar" style="width: 280px; background: #f8f9fa; padding: 20px;">
+        <h3 style="background:#2e7d32; color:white; padding:12px; margin-bottom:15px;">
+            <i class="fas fa-list"></i> All Categories
+        </h3>
+        {% for category in categories %}
+        <div style="padding: 12px 15px; border-bottom: 1px solid #eee;">
+            <a href="{% url 'shop_by_category' category.slug %}" style="text-decoration:none; color:#333;">
+                {{ category.name }}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Hero -->
+    <div class="hero" style="flex: 1;">
+        <div class="hero-content">
+            <h1>POWER YOUR HOME<br>SAVE YOUR FUTURE</h1>
+            <p>High-Efficiency Solar Solutions for India's Smartest Homes</p>
+            <a href="{% url 'shop' %}" style="background:#4caf50; color:white; padding:15px 35px; border-radius:50px; text-decoration:none;">Explore Products</a>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Products Slick Slider -->
+<div style="max-width: 1300px; margin: 50px auto; padding: 0 20px;">
+    <h2 style="text-align:center; margin-bottom: 30px; color:#2e7d32;">Featured Products</h2>
+    
+    <div class="featured-slider">
+        {% for product in featured_products %}
+        <div>
+            <div class="product-card" style="margin: 10px; border:1px solid #ddd; border-radius:10px; text-align:center; background:white;">
+                {% if product.images.first %}
+                    <img src="{{ product.images.first.image.url }}" style="width:100%; height:220px; object-fit:cover; border-radius:8px;">
+                {% else %}
+                    <img src="https://source.unsplash.com/random/300x220/?solarpanel" style="width:100%; height:220px; object-fit:cover; border-radius:8px;">
+                {% endif %}
+                
+                <h4 style="margin:12px 0 8px;">{{ product.name }}</h4>
+                <p style="color:#2e7d32; font-weight:bold; font-size:1.2rem;">
+                    ₹{{ product.discount_price|default:product.price }}
+                </p>
+                
+                <a href="{% url 'product_detail' product.slug %}" 
+                   style="background:#2e7d32; color:white; padding:10px 20px; border-radius:6px; text-decoration:none; display:inline-block; margin-bottom:10px;">
+                    View Details
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function(){
+    $('.featured-slider').slick({
+        dots: true,
+        infinite: true,
+        speed: 800,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2500,
+        arrows: true,
+        prevArrow: '<button class="slick-prev">←</button>',
+        nextArrow: '<button class="slick-next">→</button>',
+        responsive: [
+            { breakpoint: 1024, settings: { slidesToShow: 3 } },
+            { breakpoint: 768,  settings: { slidesToShow: 2 } },
+            { breakpoint: 480,  settings: { slidesToShow: 1 } }
+        ]
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}GreenPower Solutions{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css">
+
+<!-- jQuery + Slick JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+
+      .topbar {
+        background: #f8f9fa;
+        padding: 8px 0;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .navbar {
+        background: #2e7d32;
+        padding: 15px 0;
+        color: white;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+      .logo span {
+        color: #f1c40f;
+      }
+
+      .hero {
+        position: relative;
+        height: 80vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+          url("https://source.unsplash.com/random/1600x900/?solarhouse");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        color: white;
+      }
+
+      .product-card {
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 10px;
+        transition: 0.3s;
+      }
+      .product-card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+      }
+
+      .dropdown:hover .dropdown-menu {
+        display: block !important;
+      }
+
+      .footer {
+        background: #1b5e20;
+        color: white;
+        padding: 40px 0;
+        text-align: center;
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div
+        style="
+          max-width: 1300px;
+          margin: auto;
+          display: flex;
+          justify-content: space-between;
+          padding: 0 20px;
+        "
+      >
+        <div>
+          <i class="fas fa-phone"></i> +91 98765 43210 |
+          <i class="fas fa-envelope"></i> sales@greenpower.com
+        </div>
+        <div>
+          <a href="#" style="color: #2e7d32; margin: 0 15px">Help & FAQs</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navbar -->
+    <nav class="navbar">
+      <div
+        style="
+          max-width: 1300px;
+          margin: auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 20px;
+        "
+      >
+        <!-- Logo -->
+        <div class="logo">
+          <i class="fas fa-leaf"></i> GREEN<span>POWER</span>
+        </div>
+
+        <!-- Search Bar -->
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            margin: 0 40px;
+          "
+        >
+          <select
+            style="
+              padding: 10px;
+              border-radius: 30px 0 0 30px;
+              border: none;
+              width: 180px;
+            "
+          >
+            <option>All Categories</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Search for solar products..."
+            style="
+              padding: 10px;
+              flex: 1;
+              border: none;
+              border-radius: 0 30px 30px 0;
+            "
+          />
+          <button
+            style="
+              background: #4caf50;
+              color: white;
+              border: none;
+              padding: 10px 25px;
+              border-radius: 30px;
+            "
+          >
+            Search
+          </button>
+        </div>
+
+        <!-- Right Navigation -->
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            font-size: 1.05rem;
+          "
+        >
+          <a href="{% url 'shop' %}" style="color: white; text-decoration: none"
+            >Shop</a
+          >
+
+          <!-- Cart -->
+          <a
+            href="{% url 'cart' %}"
+            style="color: white; text-decoration: none; position: relative"
+          >
+            <i class="fas fa-shopping-cart"></i>
+            <span
+              style="
+                background: #f1c40f;
+                color: black;
+                border-radius: 50%;
+                padding: 2px 8px;
+                font-size: 0.85rem;
+                position: absolute;
+                top: -8px;
+                right: -8px;
+              "
+            >
+              {{ cart_count|default:0 }}
+            </span>
+          </a>
+
+          {% if user.is_authenticated %}
+          <!-- Profile Dropdown -->
+          <div
+            class="dropdown"
+            style="position: relative; display: inline-block"
+          >
+            <a
+              href="{% url 'profile' %}"
+              style="
+                color: white;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <i class="fas fa-user-circle"></i> {{ user.username }}
+            </a>
+
+            <!-- Dropdown Menu -->
+            <div
+              class="dropdown-menu"
+              style="
+                position: absolute;
+                right: 0;
+                background: white;
+                color: black;
+                padding: 12px 0;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                min-width: 180px;
+                display: none;
+                margin-top: 8px;
+                z-index: 1000;
+              "
+            >
+              <a
+                href="{% url 'profile' %}"
+                style="
+                  display: block;
+                  padding: 10px 20px;
+                  text-decoration: none;
+                  color: black;
+                "
+                >👤 Profile</a
+              >
+              <a
+                href="{% url 'my_orders' %}"
+                style="
+                  display: block;
+                  padding: 10px 20px;
+                  text-decoration: none;
+                  color: black;
+                "
+                >📦 My Orders</a
+              >
+              <a
+                href="{% url 'wishlist' %}"
+                style="
+                  display: block;
+                  padding: 10px 20px;
+                  text-decoration: none;
+                  color: black;
+                "
+                >❤️ Wishlist</a
+              >
+              <hr style="margin: 5px 0" />
+
+              <!-- Secure Logout -->
+              <form method="post" action="{% url 'logout' %}" style="margin: 0">
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  style="
+                    background: none;
+                    border: none;
+                    color: red;
+                    padding: 10px 20px;
+                    width: 100%;
+                    text-align: left;
+                    cursor: pointer;
+                  "
+                >
+                  🚪 Logout
+                </button>
+              </form>
+            </div>
+          </div>
+          {% else %}
+          <a
+            href="{% url 'register' %}"
+            style="color: white; text-decoration: none; margin-right: 15px"
+          >
+            Register
+          </a>
+          <a
+            href="{% url 'login' %}"
+            style="color: white; text-decoration: none"
+          >
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    {% block content %} {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        &copy; 2026 GreenPower Solutions Inc. | Premium Solar Energy Products
+      </p>
+    </footer>
+
+    {% block extra_js %}
+    {% endblock %}
+  </body>
+</html>
